@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RoutineLock — Daily Discipline</title>
+<style>
+:root{
+  --bg:#f6f7fb;--surface:#fff;--surface2:#f0f2f7;--text:#151822;--muted:#69707f;
+  --primary:#5b5ce2;--primary2:#7778f2;--green:#20a66a;--orange:#ef8b2c;--red:#e34b5f;
+  --border:#e5e7ee;--shadow:0 12px 35px rgba(28,32,55,.08);--radius:18px
+}
+[data-theme="dark"]{
+  --bg:#101116;--surface:#181a21;--surface2:#22252e;--text:#f4f5f8;--muted:#9ba1b0;
+  --border:#30333d;--shadow:0 14px 35px rgba(0,0,0,.3)
+}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}
+.app{display:flex;min-height:100vh}.sidebar{width:250px;background:var(--surface);border-right:1px solid var(--border);padding:24px 16px;position:fixed;inset:0 auto 0 0;z-index:5}
+.logo{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px;padding:8px 10px 28px}.logo-mark{width:36px;height:36px;border-radius:11px;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:19px}
+.nav{display:grid;gap:7px}.nav button{background:transparent;color:var(--muted);padding:12px 13px;border-radius:12px;text-align:left;font-weight:650}.nav button:hover,.nav button.active{background:var(--surface2);color:var(--text)}
+.sidebar-foot{position:absolute;bottom:22px;left:16px;right:16px}.mini-card{padding:14px;background:var(--surface2);border-radius:14px;font-size:12px;color:var(--muted)}
+.main{margin-left:250px;width:calc(100% - 250px);padding:30px;max-width:1500px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.date{color:var(--muted);font-size:14px}.mobile-nav{display:none}
+.view{display:none}.view.active{display:block}.title{font-size:30px;margin:0 0 5px;font-weight:800}.subtitle{color:var(--muted);margin:0}
+.grid{display:grid;gap:18px}.dashboard-grid{grid-template-columns:1.4fr .8fr}.cards{grid-template-columns:repeat(3,1fr)}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}.hero{background:linear-gradient(135deg,#5b5ce2,#8586fa);color:white;border:0;overflow:hidden;position:relative}.hero:after{content:"";position:absolute;width:180px;height:180px;border:28px solid rgba(255,255,255,.1);border-radius:50%;right:-65px;top:-75px}.hero .muted{color:#e1e2ff}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800;opacity:.8}.hero h2{font-size:29px;margin:7px 0}.hero-row{display:flex;justify-content:space-between;align-items:end;position:relative;z-index:1}.btn{padding:10px 14px;border-radius:11px;font-weight:750;background:var(--surface2);color:var(--text)}.btn.primary{background:var(--primary);color:#fff}.btn.white{background:#fff;color:#4c4dd0}.btn.danger{background:#ffe8eb;color:#c52e42}.btn.ghost{background:transparent;border:1px solid var(--border)}
+.progress{height:8px;background:rgba(255,255,255,.25);border-radius:10px;margin:18px 0 10px;overflow:hidden}.progress span{display:block;height:100%;background:#fff;border-radius:10px;width:42%}.small{font-size:13px}.muted{color:var(--muted)}.section-head{display:flex;justify-content:space-between;align-items:center;margin:28px 0 12px}.section-head h3{margin:0;font-size:18px}
+.activity{display:grid;grid-template-columns:75px 14px 1fr auto;gap:13px;align-items:center;padding:15px 0;border-bottom:1px solid var(--border)}.activity:last-child{border-bottom:0}.time{font-weight:750;font-size:13px;color:var(--muted);text-align:right}.dot{width:12px;height:12px;border-radius:50%;background:var(--border);position:relative}.dot:before{content:"";position:absolute;inset:-5px;border:2px solid transparent;border-radius:50%}.activity.current{background:var(--surface2);margin:0 -12px;padding:15px 12px;border-radius:13px}.activity.current .dot{background:var(--primary)}.activity.current .dot:before{border-color:var(--primary)}.activity.done .dot{background:var(--green)}.activity.done .name{text-decoration:line-through;color:var(--muted)}.name{font-weight:750}.desc{font-size:12px;color:var(--muted);margin-top:3px}.badge{font-size:11px;font-weight:750;padding:5px 8px;border-radius:999px;background:var(--surface2);color:var(--muted)}.badge.live{background:#e5e5ff;color:#4f50c9}.badge.green{background:#e4f7ef;color:#167c50}
+.routine-card{padding:18px;border:1px solid var(--border);border-radius:15px;background:var(--surface);transition:.2s}.routine-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.routine-card h4{margin:0 0 6px}.routine-card .meta{font-size:12px;color:var(--muted)}.routine-actions{display:flex;gap:7px;margin-top:15px}.iconbtn{padding:8px 10px;border-radius:9px;background:var(--surface2);color:var(--text)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field{display:grid;gap:7px}.field label{font-size:12px;font-weight:750;color:var(--muted)}input,select,textarea{background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:11px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--primary)}textarea{min-height:80px;resize:vertical}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border)}.switch{width:42px;height:24px;border-radius:30px;background:#c7cad4;padding:3px}.switch.on{background:var(--primary)}.switch i{display:block;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}.switch.on i{transform:translateX(18px)}
+.app-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.app-item{padding:11px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:9px;font-size:13px}.app-item input{accent-color:var(--primary)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(8,10,18,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal-backdrop.show{display:flex}.modal{width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--surface);border-radius:22px;padding:23px;box-shadow:0 30px 80px rgba(0,0,0,.25)}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0}.close{background:var(--surface2);color:var(--text);border-radius:10px;padding:8px 11px}
+.chooser{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.choose-card{padding:17px;border:2px solid var(--border);border-radius:15px;background:var(--surface);text-align:left}.choose-card:hover{border-color:var(--primary)}.choose-card strong{display:block;font-size:16px;margin-bottom:4px}
+.toast{position:fixed;bottom:24px;right:24px;background:#181a21;color:#fff;padding:13px 17px;border-radius:12px;box-shadow:var(--shadow);display:none;z-index:30}.toast.show{display:block}
+.lock-screen{min-height:500px;display:grid;place-items:center;text-align:center}.lock-icon{width:70px;height:70px;border-radius:22px;background:#fff0f2;color:var(--red);display:grid;place-items:center;font-size:31px;margin:auto}.lock-card{max-width:500px;margin:auto}
+@media(max-width:900px){.sidebar{width:72px;padding:18px 10px}.logo span,.nav button span,.sidebar-foot{display:none}.logo{justify-content:center}.nav button{text-align:center;font-size:18px}.main{margin-left:72px;width:calc(100% - 72px);padding:20px}.dashboard-grid,.cards{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.main{margin:0;width:100%;padding:16px 14px 80px}.sidebar{position:fixed;top:auto;bottom:0;left:0;width:100%;height:64px;padding:7px 10px;border-right:0;border-top:1px solid var(--border)}.logo,.sidebar-foot{display:none}.nav{display:flex;justify-content:space-around}.nav button{font-size:18px;padding:9px}.nav button span{display:block;font-size:10px;margin-top:1px}.topbar{margin-bottom:18px}.title{font-size:25px}.chooser{grid-template-columns:1fr}.activity{grid-template-columns:64px 12px 1fr}.activity .badge{display:none}.hero-row{align-items:flex-start;gap:10px;flex-direction:column}.app-list{grid-template-columns:1fr}}
+
+</style>
+
+<meta name="theme-color" content="#5b5ce2">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="RoutineLock">
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo"><div class="logo-mark">🔒</div><span>RoutineLock</span></div>
+  <nav class="nav">
+    <button class="active" data-view="home">⌂ <span>Home</span></button>
+    <button data-view="routines">▦ <span>Routines</span></button>
+    <button data-view="today">◷ <span>Today</span></button>
+    <button data-view="settings">⚙ <span>Settings</span></button>
+  </nav>
+  <div class="sidebar-foot"><div class="mini-card">Discipline mode<br><strong style="color:var(--green)">Ready</strong></div></div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div><div class="date" id="date"></div></div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button id="installBtn" class="btn ghost" style="display:none">＋ Install RoutineLock</button><button class="btn primary" onclick="openChooser()">Change today's routine</button></div>
+  </div>
+
+  <section id="home" class="view active">
+    <h1 class="title">Good morning 👋</h1><p class="subtitle">Stay focused. Follow the plan.</p>
+    <div class="grid dashboard-grid" style="margin-top:22px">
+      <div class="card hero">
+        <div class="eyebrow">Today's routine</div>
+        <div class="hero-row"><div><h2 id="heroRoutine">College Day</h2><div class="muted">10 activities · 6:30 AM – 10:30 PM</div></div><button class="btn white" onclick="openChooser()">Change</button></div>
+        <div class="progress"><span id="progressBar"></span></div><div class="small" id="progressText">5 of 10 activities completed</div>
+      </div>
+      <div class="card">
+        <div class="eyebrow muted">Current activity</div><h2 style="margin:8px 0 4px" id="currentName">Study</h2>
+        <div class="muted" id="currentTime">3:00 PM – 5:00 PM</div>
+        <div style="margin-top:20px"><span class="badge live">● In progress</span></div>
+      </div>
+    </div>
+    <div class="grid cards" style="margin-top:18px">
+      <div class="card"><div class="eyebrow muted">Next activity</div><h3 id="nextName">Break</h3><div class="muted" id="nextTime">5:00 PM</div></div>
+      <div class="card"><div class="eyebrow muted">Restriction</div><h3>Focus mode</h3><div class="muted">Allowed apps only</div></div>
+      <div class="card"><div class="eyebrow muted">Notifications</div><h3>On schedule</h3><div class="muted">5 min before · Start · End</div></div>
+    </div>
+    <div class="section-head"><h3>Today's timeline</h3><button class="btn ghost" onclick="openEditor()">Edit routine</button></div>
+    <div class="card" id="timeline"></div>
+  </section>
+
+  <section id="routines" class="view">
+    <div class="section-head" style="margin-top:0"><div><h1 class="title">Routines</h1><p class="subtitle">Build unlimited routines for different kinds of days.</p></div><button class="btn primary" onclick="openEditor(true)">＋ Create routine</button></div>
+    <div class="grid cards" id="routineGrid"></div>
+  </section>
+
+  <section id="today" class="view">
+    <h1 class="title">Today</h1><p class="subtitle">Your selected routine controls today's schedule.</p>
+    <div class="card" style="margin-top:22px"><div class="eyebrow muted">Selected routine</div><h2 id="todayRoutine">College Day</h2><button class="btn primary" onclick="openChooser()">Change routine</button></div>
+    <div class="section-head"><h3>Full-day schedule</h3></div><div class="card" id="todayTimeline"></div>
+  </section>
+
+  <section id="settings" class="view">
+    <h1 class="title">Settings</h1><p class="subtitle">Configure notifications, focus mode and appearance.</p>
+    <div class="grid dashboard-grid" style="margin-top:22px">
+      <div class="card">
+        <h3>Notifications</h3>
+        <div class="toggle-row"><div><strong>Notifications</strong><div class="small muted">Routine and activity reminders</div></div><div class="switch on" onclick="toggle(this)"><i></i></div></div>
+        <div class="field" style="margin-top:15px"><label>Reminder timing</label><select><option>5 minutes before</option><option>10 minutes before</option><option>15 minutes before</option><option>At start only</option></select></div>
+        <div class="toggle-row"><div><strong>Sound</strong><div class="small muted">Play activity alarms</div></div><div class="switch on" onclick="toggle(this)"><i></i></div></div>
+        <div class="toggle-row"><div><strong>Vibration</strong></div><div class="switch on" onclick="toggle(this)"><i></i></div></div>
+      </div>
+      <div class="card">
+        <h3>App Blocking</h3>
+        <div class="toggle-row"><div><strong>Accessibility status</strong><div class="small muted">Required for app restriction</div></div><span class="badge green">Not connected</span></div>
+        <p class="small muted">Android requires an Accessibility Service to detect blocked app launches. RoutineLock should only request this permission after you explicitly enable App Blocking.</p>
+        <button class="btn primary" onclick="toast('Opening Android Accessibility settings…')">Enable App Blocking</button>
+        <div class="section-head"><h3 style="font-size:15px">Emergency / essential apps</h3></div>
+        <div class="small muted">Phone · Emergency services · Settings recovery</div>
+      </div>
+      <div class="card">
+        <h3>Routine</h3>
+        <div class="field"><label>Morning chooser notification</label><input type="time" value="06:00"></div>
+        <div class="toggle-row"><div><strong>Automatic weekday routine</strong><div class="small muted">Off by default</div></div><div class="switch" onclick="toggle(this)"><i></i></div></div>
+        <div class="small muted" style="margin-top:13px">When disabled, RoutineLock always asks which routine you want to follow.</div>
+      </div>
+      <div class="card">
+        <h3>Appearance</h3>
+        <div class="field"><label>Theme</label><select id="theme" onchange="setTheme(this.value)"><option value="system">System default</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+
+<div class="modal-backdrop" id="chooserModal">
+ <div class="modal">
+  <div class="modal-head"><div><h2>Which routine do you want to follow today?</h2><p class="muted small">Only the selected routine will control today's schedule.</p></div><button class="close" onclick="closeModal('chooserModal')">✕</button></div>
+  <div class="chooser" id="chooser" style="margin-top:18px"></div>
+ </div>
+</div>
+
+<div class="modal-backdrop" id="editorModal">
+ <div class="modal">
+  <div class="modal-head"><h2 id="editorTitle">Create routine</h2><button class="close" onclick="closeModal('editorModal')">✕</button></div>
+  <div class="form-grid" style="margin-top:18px">
+   <div class="field"><label>Routine name</label><input id="routineName" value="Custom Routine"></div>
+   <div class="field"><label>Color</label><select><option>Indigo</option><option>Green</option><option>Orange</option></select></div>
+  </div>
+  <div class="section-head"><h3>Activities</h3><button class="btn ghost" onclick="addActivity()">＋ Add activity</button></div>
+  <div id="activityEditor"></div>
+  <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:20px"><button class="btn ghost" onclick="closeModal('editorModal')">Cancel</button><button class="btn primary" onclick="saveEditor()">Save routine</button></div>
+ </div>
+</div>
+
+<div class="modal-backdrop" id="appsModal">
+ <div class="modal">
+  <div class="modal-head"><div><h2>Allowed apps</h2><p class="muted small">Select apps that remain usable during this activity.</p></div><button class="close" onclick="closeModal('appsModal')">✕</button></div>
+  <div class="app-list">
+   <label class="app-item"><input type="checkbox" checked> 🌐 Chrome</label>
+   <label class="app-item"><input type="checkbox" checked> ▶️ YouTube</label>
+   <label class="app-item"><input type="checkbox"> 📷 Instagram</label>
+   <label class="app-item"><input type="checkbox" checked> 🧮 Calculator</label>
+   <label class="app-item"><input type="checkbox" checked> 📄 PDF Reader</label>
+   <label class="app-item"><input type="checkbox"> 💬 WhatsApp</label>
+   <label class="app-item"><input type="checkbox"> 🎮 Games</label>
+   <label class="app-item"><input type="checkbox" checked> 📝 Notes</label>
+  </div>
+  <div style="text-align:right;margin-top:18px"><button class="btn primary" onclick="closeModal('appsModal');toast('Allowed apps saved')">Save selection</button></div>
+ </div>
+</div>
+
+<div class="modal-backdrop" id="lockModal">
+ <div class="modal lock-screen"><div class="lock-card"><div class="lock-icon">🔒</div><h1>App blocked</h1><p class="muted">You are currently following:</p><h2>Study · 3:00 PM–5:00 PM</h2><p>This app isn't allowed during this activity.</p><div class="card" style="margin-top:20px;text-align:left"><strong>Current activity</strong><br><span class="muted">Study</span><br><br><strong>Ends at</strong><br><span class="muted">5:00 PM</span></div></div></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js">
+// RoutineLock PWA: service worker + install prompt
+let deferredInstallPrompt = null;
+const installBtn = document.getElementById("installBtn");
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {
+      // The page remains fully usable if service-worker registration is unavailable.
+    });
+  });
+}
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  if (installBtn) installBtn.style.display = "inline-flex";
+});
+
+if (installBtn) {
+  installBtn.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) {
+      toast("Use your browser menu and choose Add to Home screen.");
+      return;
+    }
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installBtn.style.display = "none";
+  });
+}
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  if (installBtn) installBtn.style.display = "none";
+  if (typeof toast === "function") toast("RoutineLock installed.");
+});
+
+</script>
+</body>
+</html>
